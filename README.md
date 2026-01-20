@@ -23,14 +23,15 @@ This is a sample "main.tf" file.  In this example, we are creating a 3-node Ubun
 
 Additionally, with the "VIP" tag, we enable Kubevip for HA.  The Edge Host is now looked up via the "tag" on the Edge Host.  Multiple tags can be used for this purpose.  See the example for usage with multiple pools.  The Tag(s) should be added to the Edge Host before running the plan.  This applies to virtual machines as well.  For ease of use, we have provided a QRCode giving you the ability to easily copy the UID of the device.  
 
-| QR Code  | UID Copy |
-| --------|--------- |
-![QRCode](images/qrcode.png) | ![UID Copy](images/uid_copy.png)
 
 ```tf
-module "edge-demo-module" {
+## #########################################################################################
+## Example of using cluster profiles with a cluster template
+## #########################################################################################
+
+module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "1.5.0"
+  version = "2.0.0"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -44,10 +45,10 @@ module "edge-demo-module" {
   ]
 
   # Cluster VIP to be used with KubeVIP If not using Overlay
-  # cluster_vip = "10.10.100.5"
+  cluster_vip = "10.100.101.71"
 
   # Overlay CIDR Range
-  overlay_cidr_range = "100.64.128.0/18"
+  # overlay_cidr_range = "100.64.128.0/18"
 
   # Node Pools for Cluster
   machine_pools = [
@@ -61,27 +62,144 @@ module "edge-demo-module" {
       }
       edge_host = [
         {
-          host_uid  = "edge12345"
-          host_name = "edge1"
-          static_ip = "10.100.100.31"
-          subnet_mask = "255.255.255.0"
+          host_uid        = "demo-18b14144f3c7e249be69ea02992a8801"
+          host_name       = "edge1"
+          static_ip       = "10.100.100.31"
+          subnet_mask     = "255.255.255.0"
           default_gateway = "10.100.100.1"
-          dns_servers = ["10.100.100.1","10.100.100.2"]
+          dns_servers     = ["10.100.100.1", "10.100.100.2"]
 
         },
-                {
-          host_uid  = "edge123456"
-          host_name = "edge2"
-          static_ip = "10.100.100.32"
-          subnet_mask = "255.255.255.0"
+        {
+          host_uid        = "edge123456"
+          host_name       = "edge2"
+          static_ip       = "10.100.100.32"
+          subnet_mask     = "255.255.255.0"
           default_gateway = "10.100.100.1"
-          dns_servers = ["10.100.100.1","10.100.100.2"]
-          nic_name = "auto"
+          dns_servers     = ["10.100.100.1", "10.100.100.2"]
+          nic_name        = "auto"
 
         }
       ]
     },
-    # Add additional node pools
+    # # Add additional node pools
+    {
+      name          = "gpu"
+      control_plane = false
+      edge_host = [
+
+        {
+          host_uid  = "123test"
+          static_ip = "2.2.2.2"
+        }
+      ]
+      additional_labels = {
+        "type" : "gpu",
+        "region" : "east"
+      }
+    }
+
+  ]
+
+  # Cluster Geolocation (Optional)
+  location = {
+    latitude  = 40.442829
+    longitude = -79.950432
+  }
+  rbac_bindings = [
+    {
+      rbac_type = "ClusterRoleBinding"
+      rbac_role = {
+        name = "cluster-admin"
+        kind = "ClusterRole"
+      }
+      subjects = [
+        {
+          name      = "k8s-admin"
+          rbac_type = "Group"
+        }
+      ]
+    }
+  ]
+
+  # Template and profile IDs are looked up automatically by name
+  cluster_template = {
+    name    = "east-clusters"
+    context = "project" # Optional: "project" (default) or "tenant"
+    cluster_profile = [
+      {
+        name    = "edge-profile"
+        tag     = "1.33.5"  # Optional: version tag
+        context = "project" # Optional: "project" (default), "tenant", or "system"
+        variables = {
+          "clusterCIDR" = "10.10.100.0/18"
+          "svcCIDR"     = "10.10.128.0/18"
+        }
+      }
+    ]
+  }
+
+}
+
+
+## #########################################################################################
+## Example of using cluster profiles without a cluster template
+## #########################################################################################
+
+module "edge-demo-module-no-template" {
+  source  = "spectrocloud/edge/spectrocloud"
+  version = "2.0.0"
+  # Store Number/Location
+  name = "demo"
+  # add tags to the cluster (optional) list(strings)
+  cluster_tags = ["origin:terraform"]
+  ssh_keys = [
+    "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbm test2",
+  "ecdsa-sha2-nistp256 AAAAE2VjZHNhL test1"]
+  ntp_servers = [
+    "10.10.10.1",
+    "10.10.10.2"
+  ]
+
+  # Cluster VIP to be used with KubeVIP If not using Overlay
+  cluster_vip = "10.100.101.71"
+
+  # Overlay CIDR Range
+  # overlay_cidr_range = "100.64.128.0/18"
+
+  # Node Pools for Cluster
+  machine_pools = [
+    # Control Plane Node Pool
+    {
+      name                    = "control-plane"
+      control_plane           = true
+      control_plane_as_worker = false
+      additional_labels = {
+        "region" : "east"
+      }
+      edge_host = [
+        {
+          host_uid        = "demo-18b14144f3c7e249be69ea02992a8801"
+          host_name       = "edge1"
+          static_ip       = "10.100.100.31"
+          subnet_mask     = "255.255.255.0"
+          default_gateway = "10.100.100.1"
+          dns_servers     = ["10.100.100.1", "10.100.100.2"]
+
+        },
+        {
+          host_uid        = "edge123456"
+          host_name       = "edge2"
+          static_ip       = "10.100.100.32"
+          subnet_mask     = "255.255.255.0"
+          default_gateway = "10.100.100.1"
+          dns_servers     = ["10.100.100.1", "10.100.100.2"]
+          nic_name        = "auto"
+
+        }
+      ]
+    },
+    # # Add additional node pools
     {
       name          = "gpu"
       control_plane = false
@@ -104,7 +222,7 @@ module "edge-demo-module" {
   cluster_profiles = [
     {
       name    = "edge-profile"
-      tag     = "1.30.5-ubuntu"
+      tag     = "1.33.5"
       context = "project"
     },
     {
@@ -138,8 +256,8 @@ module "edge-demo-module" {
       ]
     }
   ]
-
 }
+
 
 
 ```
