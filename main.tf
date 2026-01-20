@@ -7,6 +7,23 @@ data "spectrocloud_cluster_profile" "this" {
   context = each.value["context"]
 }
 
+# Data source for cluster config template lookup
+data "spectrocloud_cluster_config_template" "this" {
+  count   = var.cluster_template != null ? 1 : 0
+  name    = var.cluster_template.name
+  context = var.cluster_template.context
+}
+
+# Data source for cluster profiles within the cluster template
+data "spectrocloud_cluster_profile" "template_profiles" {
+  for_each = var.cluster_template != null && var.cluster_template.cluster_profile != null ? {
+    for profile in var.cluster_template.cluster_profile : profile.name => profile
+  } : {}
+  name    = each.key
+  version = each.value["tag"]
+  context = each.value["context"]
+}
+
 resource "spectrocloud_cluster_edge_native" "this" {
   name            = var.name
   tags            = var.cluster_tags
@@ -88,6 +105,31 @@ resource "spectrocloud_cluster_edge_native" "this" {
           namespace = subjects.value.namespace
         }
       }
+    }
+  }
+
+  dynamic "cluster_template" {
+    for_each = var.cluster_template != null ? [var.cluster_template] : []
+    content {
+      id = data.spectrocloud_cluster_config_template.this[0].id
+
+      dynamic "cluster_profile" {
+        for_each = cluster_template.value.cluster_profile != null ? cluster_template.value.cluster_profile : []
+        content {
+          id        = data.spectrocloud_cluster_profile.template_profiles[cluster_profile.value.name].id
+          variables = cluster_profile.value.variables
+        }
+      }
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition = (
+        (length(var.cluster_profiles) > 0 && var.cluster_template == null) ||
+        (length(var.cluster_profiles) == 0 && var.cluster_template != null)
+      )
+      error_message = "You must provide either 'cluster_profiles' or 'cluster_template', but not both."
     }
   }
 

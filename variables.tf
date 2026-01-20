@@ -60,6 +60,7 @@ variable "cluster_profiles" {
       })))
     })))
   }))
+  default = []
 }
 
 variable "rbac_bindings" {
@@ -118,14 +119,17 @@ variable "location" {
   description = "Optional - If used Latitude and Longitude represent the coordinates of the location you wish to assign to the cluster.  https://www.latlong.net/ is one tool that can be used to find this."
 }
 
-# variable "binding_type" {
-#   type        = string
-#   description = "Role binding type to be created with the cluster."
-#   default     = null
-# }
-
-# variable "binding_role" {
-#   type        = map(string)
-#   description = "Role binding type to be created with the cluster."
-#   default     = null
-# }
+variable "cluster_template" {
+  description = "Optional cluster template configuration. Provide the template name and context, and optionally cluster profiles with variables. IDs are looked up automatically."
+  type = object({
+    name    = string
+    context = optional(string, "project") # project or tenant
+    cluster_profile = optional(list(object({
+      name      = string
+      tag       = optional(string)
+      context   = optional(string, "project") # project, tenant, or system
+      variables = optional(map(string))
+    })))
+  })
+  default = null
+}
