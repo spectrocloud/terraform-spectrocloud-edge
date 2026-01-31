@@ -17,6 +17,7 @@ Module Version |  Required Terraform Version
   <= 1.0.0     |        <= 1.2.9
   \>= 1.1.0     |        >= 1.3.0
 
+
 See the [Examples](https://github.com/spectrocloud/terraform-palette-edge/tree/main/examples) for usage of this module.  This module is written for the Edge Native Deployment option.
 
 This is a sample "main.tf" file.  In this example, we are creating a 3-node Ubuntu-PXKE 1.24 cluster.  This cluster has a basic profile for the Ubuntu Operating System, PXK-E (Palette Optimized Kubernetes for the Edge), a CNI, and a few other example profiles.  These profiles were created ahead of time.
@@ -31,7 +32,7 @@ Additionally, with the "VIP" tag, we enable Kubevip for HA.  The Edge Host is no
 
 module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.0"
+  version = "2.0.1"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -151,7 +152,7 @@ module "edge-demo-module-template" {
 
 module "edge-demo-module-no-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.0"
+  version = "2.0.1"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)

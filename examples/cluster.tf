@@ -4,7 +4,7 @@
 
 module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.0"
+  version = "2.0.1"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
