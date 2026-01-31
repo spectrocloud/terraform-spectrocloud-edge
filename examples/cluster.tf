@@ -140,6 +140,9 @@ module "edge-demo-module-no-template" {
   # Overlay CIDR Range
   # overlay_cidr_range = "100.64.128.0/18"
 
+  # Cluster Timezone
+  cluster_timezone = "America/New_York"
+
   # Node Pools for Cluster
   machine_pools = [
     # Control Plane Node Pool

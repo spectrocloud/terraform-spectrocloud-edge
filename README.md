@@ -50,6 +50,9 @@ module "edge-demo-module-template" {
   # Overlay CIDR Range
   # overlay_cidr_range = "100.64.128.0/18"
 
+
+  # Cluster Timezone
+  cluster_timezone = "America/New_York"
   # Node Pools for Cluster
   machine_pools = [
     # Control Plane Node Pool
@@ -167,6 +170,9 @@ module "edge-demo-module-no-template" {
   # Overlay CIDR Range
   # overlay_cidr_range = "100.64.128.0/18"
 
+  # Cluster Timezone
+  cluster_timezone = "America/New_York"
+
   # Node Pools for Cluster
   machine_pools = [
     # Control Plane Node Pool
@@ -273,7 +279,7 @@ module "edge-demo-module-no-template" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_spectrocloud"></a> [spectrocloud](#provider\_spectrocloud) | >= 0.27.0 |
+| <a name="provider_spectrocloud"></a> [spectrocloud](#provider\_spectrocloud) | 0.27.2 |
 
 ## Modules
 
@@ -292,16 +298,17 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_profiles"></a> [cluster\_profiles](#input\_cluster\_profiles) | Values for the profile(s) to be used for cluster creation.  For `context` a value of [project tenant system] is expected. | <pre>list(object({<br>    name    = string<br>    tag     = optional(string)<br>    context = string # project tenant system<br>    packs = optional(list(object({<br>      name   = string<br>      tag    = string<br>      values = optional(string)<br>      manifest = optional(list(object({<br>        name    = string<br>        tag     = string<br>        content = string<br>      })))<br>    })))<br>  }))</pre> | `[]` | no |
+| <a name="input_cluster_profiles"></a> [cluster\_profiles](#input\_cluster\_profiles) | Values for the profile(s) to be used for cluster creation.  For `context` a value of [project tenant system] is expected. | <pre>list(object({<br/>    name    = string<br/>    tag     = optional(string)<br/>    context = string # project tenant system<br/>    packs = optional(list(object({<br/>      name   = string<br/>      tag    = string<br/>      values = optional(string)<br/>      manifest = optional(list(object({<br/>        name    = string<br/>        tag     = string<br/>        content = string<br/>      })))<br/>    })))<br/>  }))</pre> | `[]` | no |
 | <a name="input_cluster_tags"></a> [cluster\_tags](#input\_cluster\_tags) | Tags to be added to the profile.  key:value | `list(string)` | `[]` | no |
-| <a name="input_cluster_template"></a> [cluster\_template](#input\_cluster\_template) | Optional cluster template configuration. Provide the template name and context, and optionally cluster profiles with variables. IDs are looked up automatically. | <pre>object({<br>    name    = string<br>    context = optional(string, "project") # project or tenant<br>    cluster_profile = optional(list(object({<br>      name      = string<br>      tag       = optional(string)<br>      context   = optional(string, "project") # project, tenant, or system<br>      variables = optional(map(string))<br>    })))<br>  })</pre> | `null` | no |
+| <a name="input_cluster_template"></a> [cluster\_template](#input\_cluster\_template) | Optional cluster template configuration. Provide the template name and context, and optionally cluster profiles with variables. IDs are looked up automatically. | <pre>object({<br/>    name    = string<br/>    context = optional(string, "project") # project or tenant<br/>    cluster_profile = optional(list(object({<br/>      name      = string<br/>      tag       = optional(string)<br/>      context   = optional(string, "project") # project, tenant, or system<br/>      variables = optional(map(string))<br/>    })))<br/>  })</pre> | `null` | no |
+| <a name="input_cluster_timezone"></a> [cluster\_timezone](#input\_cluster\_timezone) | Timezone for the cluster. | `string` | `""` | no |
 | <a name="input_cluster_vip"></a> [cluster\_vip](#input\_cluster\_vip) | IP Address for Cluster VIP for HA.  Must be unused on on the same layer 2 segment as the node IPs. | `string` | `""` | no |
-| <a name="input_location"></a> [location](#input\_location) | Optional - If used Latitude and Longitude represent the coordinates of the location you wish to assign to the cluster.  https://www.latlong.net/ is one tool that can be used to find this. | <pre>object({<br>    latitude  = optional(number)<br>    longitude = optional(number)<br>  })</pre> | <pre>{<br>  "latitude": 0,<br>  "longitude": 0<br>}</pre> | no |
-| <a name="input_machine_pools"></a> [machine\_pools](#input\_machine\_pools) | Values for the attributes of the Node Pools. 'edge\_host\_tags' is used to lookup the Edge Host already registered with Palette. | <pre>list(object({<br>    name                    = string<br>    additional_labels       = optional(map(string))<br>    control_plane           = optional(bool)<br>    control_plane_as_worker = optional(bool)<br>    taints = optional(list(object({<br>      effect = string<br>      key    = string<br>      value  = string<br>    })))<br>    edge_host = list(object({<br>      host_uid        = string<br>      host_name       = optional(string)<br>      nic_name        = optional(string)<br>      static_ip       = optional(string)<br>      subnet_mask     = optional(string)<br>      default_gateway = optional(string)<br>      dns_servers     = optional(list(string))<br>      two_node_role   = optional(string)<br>    }))<br>  }))</pre> | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Optional - If used Latitude and Longitude represent the coordinates of the location you wish to assign to the cluster.  https://www.latlong.net/ is one tool that can be used to find this. | <pre>object({<br/>    latitude  = optional(number)<br/>    longitude = optional(number)<br/>  })</pre> | <pre>{<br/>  "latitude": 0,<br/>  "longitude": 0<br/>}</pre> | no |
+| <a name="input_machine_pools"></a> [machine\_pools](#input\_machine\_pools) | Values for the attributes of the Node Pools. 'edge\_host\_tags' is used to lookup the Edge Host already registered with Palette. | <pre>list(object({<br/>    name                    = string<br/>    additional_labels       = optional(map(string))<br/>    control_plane           = optional(bool)<br/>    control_plane_as_worker = optional(bool)<br/>    taints = optional(list(object({<br/>      effect = string<br/>      key    = string<br/>      value  = string<br/>    })))<br/>    edge_host = list(object({<br/>      host_uid        = string<br/>      host_name       = optional(string)<br/>      nic_name        = optional(string)<br/>      static_ip       = optional(string)<br/>      subnet_mask     = optional(string)<br/>      default_gateway = optional(string)<br/>      dns_servers     = optional(list(string))<br/>      two_node_role   = optional(string)<br/>    }))<br/>  }))</pre> | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of the cluster to be created. | `string` | n/a | yes |
 | <a name="input_ntp_servers"></a> [ntp\_servers](#input\_ntp\_servers) | n/a | `list(string)` | `[]` | no |
 | <a name="input_overlay_cidr_range"></a> [overlay\_cidr\_range](#input\_overlay\_cidr\_range) | CIDR range for the overlay network. | `string` | `""` | no |
-| <a name="input_rbac_bindings"></a> [rbac\_bindings](#input\_rbac\_bindings) | RBAC Bindings to be added to the cluster | <pre>list(object({<br>    rbac_type = string<br>    namespace = optional(string)<br>    rbac_role = optional(map(string))<br>    subjects = optional(list(object({<br>      name      = string<br>      rbac_type = string<br>      namespace = optional(string)<br>    })))<br>  }))</pre> | `[]` | no |
+| <a name="input_rbac_bindings"></a> [rbac\_bindings](#input\_rbac\_bindings) | RBAC Bindings to be added to the cluster | <pre>list(object({<br/>    rbac_type = string<br/>    namespace = optional(string)<br/>    rbac_role = optional(map(string))<br/>    subjects = optional(list(object({<br/>      name      = string<br/>      rbac_type = string<br/>      namespace = optional(string)<br/>    })))<br/>  }))</pre> | `[]` | no |
 | <a name="input_skip_wait_for_completion"></a> [skip\_wait\_for\_completion](#input\_skip\_wait\_for\_completion) | n/a | `bool` | `true` | no |
 | <a name="input_ssh_keys"></a> [ssh\_keys](#input\_ssh\_keys) | n/a | `list(string)` | `[]` | no |
 

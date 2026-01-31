@@ -133,3 +133,9 @@ variable "cluster_template" {
   })
   default = null
 }
+
+variable "cluster_timezone" {
+  type        = string
+  description = "Timezone for the cluster."
+  default     = ""
+}

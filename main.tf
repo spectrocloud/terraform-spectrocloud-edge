@@ -132,5 +132,5 @@ resource "spectrocloud_cluster_edge_native" "this" {
       error_message = "You must provide either 'cluster_profiles' or 'cluster_template', but not both."
     }
   }
-
+  cluster_timezone = var.cluster_timezone != "" ? var.cluster_timezone : null
 }
