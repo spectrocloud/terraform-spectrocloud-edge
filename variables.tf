@@ -79,11 +79,11 @@ variable "rbac_bindings" {
 }
 variable "cluster_vip" {
   type        = string
-  description = "IP Address for Cluster VIP for HA.  Must be unused on on the same layer 2 segment as the node IPs."
+  description = "IP Address or DNS name for Cluster VIP for HA. If using an IP, it must be unused and on the same layer 2 segment as the node IPs."
   default     = ""
   validation {
-    condition     = var.cluster_vip == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$", var.cluster_vip))
-    error_message = "Cluster VIP must be a valid IP address."
+    condition     = var.cluster_vip == "" || can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$", var.cluster_vip)) || can(regex("^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)*[a-zA-Z]{2,}$", var.cluster_vip))
+    error_message = "Cluster VIP must be a valid IP address or DNS name."
   }
 }
 variable "overlay_cidr_range" {

@@ -32,7 +32,7 @@ Additionally, with the "VIP" tag, we enable Kubevip for HA.  The Edge Host is no
 
 module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.1"
+  version = "2.0.2"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -144,15 +144,16 @@ module "edge-demo-module-template" {
   }
 
 }
+```
 
-
+```tf
 ## #########################################################################################
 ## Example of using cluster profiles without a cluster template
 ## #########################################################################################
 
 module "edge-demo-module-no-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.1"
+  version = "2.0.2"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -303,7 +304,7 @@ No modules.
 | <a name="input_cluster_tags"></a> [cluster\_tags](#input\_cluster\_tags) | Tags to be added to the profile.  key:value | `list(string)` | `[]` | no |
 | <a name="input_cluster_template"></a> [cluster\_template](#input\_cluster\_template) | Optional cluster template configuration. Provide the template name and context, and optionally cluster profiles with variables. IDs are looked up automatically. | <pre>object({<br/>    name    = string<br/>    context = optional(string, "project") # project or tenant<br/>    cluster_profile = optional(list(object({<br/>      name      = string<br/>      tag       = optional(string)<br/>      context   = optional(string, "project") # project, tenant, or system<br/>      variables = optional(map(string))<br/>    })))<br/>  })</pre> | `null` | no |
 | <a name="input_cluster_timezone"></a> [cluster\_timezone](#input\_cluster\_timezone) | Timezone for the cluster. | `string` | `""` | no |
-| <a name="input_cluster_vip"></a> [cluster\_vip](#input\_cluster\_vip) | IP Address for Cluster VIP for HA.  Must be unused on on the same layer 2 segment as the node IPs. | `string` | `""` | no |
+| <a name="input_cluster_vip"></a> [cluster\_vip](#input\_cluster\_vip) | IP Address or DNS name for Cluster VIP for HA. If using an IP, it must be unused and on the same layer 2 segment as the node IPs. | `string` | `""` | no |
 | <a name="input_location"></a> [location](#input\_location) | Optional - If used Latitude and Longitude represent the coordinates of the location you wish to assign to the cluster.  https://www.latlong.net/ is one tool that can be used to find this. | <pre>object({<br/>    latitude  = optional(number)<br/>    longitude = optional(number)<br/>  })</pre> | <pre>{<br/>  "latitude": 0,<br/>  "longitude": 0<br/>}</pre> | no |
 | <a name="input_machine_pools"></a> [machine\_pools](#input\_machine\_pools) | Values for the attributes of the Node Pools. 'edge\_host\_tags' is used to lookup the Edge Host already registered with Palette. | <pre>list(object({<br/>    name                    = string<br/>    additional_labels       = optional(map(string))<br/>    control_plane           = optional(bool)<br/>    control_plane_as_worker = optional(bool)<br/>    taints = optional(list(object({<br/>      effect = string<br/>      key    = string<br/>      value  = string<br/>    })))<br/>    edge_host = list(object({<br/>      host_uid        = string<br/>      host_name       = optional(string)<br/>      nic_name        = optional(string)<br/>      static_ip       = optional(string)<br/>      subnet_mask     = optional(string)<br/>      default_gateway = optional(string)<br/>      dns_servers     = optional(list(string))<br/>      two_node_role   = optional(string)<br/>    }))<br/>  }))</pre> | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of the cluster to be created. | `string` | n/a | yes |
