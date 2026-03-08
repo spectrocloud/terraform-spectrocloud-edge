@@ -4,7 +4,7 @@
 
 module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.2"
+  version = "2.0.3"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -121,7 +121,7 @@ module "edge-demo-module-template" {
 
 module "edge-demo-module-no-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.2"
+  version = "2.0.3"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -200,6 +200,10 @@ module "edge-demo-module-no-template" {
       name    = "edge-profile"
       tag     = "1.33.5"
       context = "project"
+      variables = {
+        "clusterCIDR" = "10.10.100.0/18"
+        "svcCIDR"     = "10.10.128.0/18"
+      }
     },
     {
       name    = "edge-services"

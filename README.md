@@ -32,7 +32,7 @@ Additionally, with the "VIP" tag, we enable Kubevip for HA.  The Edge Host is no
 
 module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.2"
+  version = "2.0.3"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -51,9 +51,6 @@ module "edge-demo-module-template" {
   # Overlay CIDR Range
   # overlay_cidr_range = "100.64.128.0/18"
 
-
-  # Cluster Timezone
-  cluster_timezone = "America/New_York"
   # Node Pools for Cluster
   machine_pools = [
     # Control Plane Node Pool
@@ -144,16 +141,15 @@ module "edge-demo-module-template" {
   }
 
 }
-```
 
-```tf
+
 ## #########################################################################################
 ## Example of using cluster profiles without a cluster template
 ## #########################################################################################
 
 module "edge-demo-module-no-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.2"
+  version = "2.0.3"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -232,6 +228,10 @@ module "edge-demo-module-no-template" {
       name    = "edge-profile"
       tag     = "1.33.5"
       context = "project"
+      variables = {
+        "clusterCIDR" = "10.10.100.0/18"
+        "svcCIDR"     = "10.10.128.0/18"
+      }
     },
     {
       name    = "edge-services"
@@ -267,7 +267,6 @@ module "edge-demo-module-no-template" {
 }
 
 
-
 ```
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -281,7 +280,7 @@ module "edge-demo-module-no-template" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_spectrocloud"></a> [spectrocloud](#provider\_spectrocloud) | 0.27.2 |
+| <a name="provider_spectrocloud"></a> [spectrocloud](#provider\_spectrocloud) | >= 0.27.0 |
 
 ## Modules
 
@@ -300,7 +299,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_profiles"></a> [cluster\_profiles](#input\_cluster\_profiles) | Values for the profile(s) to be used for cluster creation.  For `context` a value of [project tenant system] is expected. | <pre>list(object({<br/>    name    = string<br/>    tag     = optional(string)<br/>    context = string # project tenant system<br/>    packs = optional(list(object({<br/>      name   = string<br/>      tag    = string<br/>      values = optional(string)<br/>      manifest = optional(list(object({<br/>        name    = string<br/>        tag     = string<br/>        content = string<br/>      })))<br/>    })))<br/>  }))</pre> | `[]` | no |
+| <a name="input_cluster_profiles"></a> [cluster\_profiles](#input\_cluster\_profiles) | Values for the profile(s) to be used for cluster creation.  For `context` a value of [project tenant system] is expected. | <pre>list(object({<br/>    name    = string<br/>    tag     = optional(string)<br/>    context = string # project tenant system<br/>    packs = optional(list(object({<br/>      name   = string<br/>      tag    = string<br/>      values = optional(string)<br/>      manifest = optional(list(object({<br/>        name    = string<br/>        tag     = string<br/>        content = string<br/>      })))<br/>    })))<br/>    variables = optional(map(string))<br/>  }))</pre> | `[]` | no |
 | <a name="input_cluster_tags"></a> [cluster\_tags](#input\_cluster\_tags) | Tags to be added to the profile.  key:value | `list(string)` | `[]` | no |
 | <a name="input_cluster_template"></a> [cluster\_template](#input\_cluster\_template) | Optional cluster template configuration. Provide the template name and context, and optionally cluster profiles with variables. IDs are looked up automatically. | <pre>object({<br/>    name    = string<br/>    context = optional(string, "project") # project or tenant<br/>    cluster_profile = optional(list(object({<br/>      name      = string<br/>      tag       = optional(string)<br/>      context   = optional(string, "project") # project, tenant, or system<br/>      variables = optional(map(string))<br/>    })))<br/>  })</pre> | `null` | no |
 | <a name="input_cluster_timezone"></a> [cluster\_timezone](#input\_cluster\_timezone) | Timezone for the cluster. | `string` | `""` | no |

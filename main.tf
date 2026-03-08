@@ -53,7 +53,7 @@ resource "spectrocloud_cluster_edge_native" "this" {
 
         content {
           effect = taints.value.effect
-          key    = tainst.value.key
+          key    = taints.value.key
           value  = taints.value.value
         }
       }
@@ -77,7 +77,8 @@ resource "spectrocloud_cluster_edge_native" "this" {
   dynamic "cluster_profile" {
     for_each = var.cluster_profiles
     content {
-      id = data.spectrocloud_cluster_profile.this[cluster_profile.value.name].id
+      id        = data.spectrocloud_cluster_profile.this[cluster_profile.value.name].id
+      variables = cluster_profile.value.variables
       dynamic "pack" {
         for_each = cluster_profile.value.packs == null ? [] : cluster_profile.value.packs
         content {
@@ -116,7 +117,7 @@ resource "spectrocloud_cluster_edge_native" "this" {
       dynamic "cluster_profile" {
         for_each = cluster_template.value.cluster_profile != null ? cluster_template.value.cluster_profile : []
         content {
-          id        = data.spectrocloud_cluster_profile.template_profiles[cluster_profile.value.name].id
+          id        = try(data.spectrocloud_cluster_profile.template_profiles[cluster_profile.value.name].id, null)
           variables = cluster_profile.value.variables
         }
       }
@@ -130,6 +131,13 @@ resource "spectrocloud_cluster_edge_native" "this" {
         (length(var.cluster_profiles) == 0 && var.cluster_template != null)
       )
       error_message = "You must provide either 'cluster_profiles' or 'cluster_template', but not both."
+    }
+    precondition {
+      condition = (
+        length(var.cluster_profiles) > 0 ||
+        (var.cluster_template != null && var.cluster_template.cluster_profile != null && length(var.cluster_template.cluster_profile) > 0)
+      )
+      error_message = "At least one cluster profile is required. Provide 'cluster_profiles' or 'cluster_template' with at least one 'cluster_profile'."
     }
   }
   cluster_timezone = var.cluster_timezone != "" ? var.cluster_timezone : null
