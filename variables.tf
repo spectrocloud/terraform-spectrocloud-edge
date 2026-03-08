@@ -59,6 +59,7 @@ variable "cluster_profiles" {
         content = string
       })))
     })))
+    variables = optional(map(string))
   }))
   default = []
 }
