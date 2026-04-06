@@ -32,7 +32,7 @@ Additionally, with the "VIP" tag, we enable Kubevip for HA.  The Edge Host is no
 
 module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.3"
+  version = "2.0.4"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -149,7 +149,7 @@ module "edge-demo-module-template" {
 
 module "edge-demo-module-no-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.3"
+  version = "2.0.4"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
