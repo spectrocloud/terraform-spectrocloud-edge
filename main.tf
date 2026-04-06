@@ -140,5 +140,6 @@ resource "spectrocloud_cluster_edge_native" "this" {
       error_message = "At least one cluster profile is required. Provide 'cluster_profiles' or 'cluster_template' with at least one 'cluster_profile'."
     }
   }
-  cluster_timezone = var.cluster_timezone != "" ? var.cluster_timezone : null
+  cluster_timezone                = var.cluster_timezone != "" ? var.cluster_timezone : null
+  update_worker_pools_in_parallel = var.update_worker_pools_in_parallel
 }

@@ -32,7 +32,7 @@ Additionally, with the "VIP" tag, we enable Kubevip for HA.  The Edge Host is no
 
 module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.3"
+  version = "2.0.4"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -149,7 +149,7 @@ module "edge-demo-module-template" {
 
 module "edge-demo-module-no-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.3"
+  version = "2.0.4"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -170,6 +170,9 @@ module "edge-demo-module-no-template" {
 
   # Cluster Timezone
   cluster_timezone = "America/New_York"
+
+  # Update worker pools in parallel (optional, default: true)
+  # update_worker_pools_in_parallel = false
 
   # Node Pools for Cluster
   machine_pools = [
@@ -312,6 +315,7 @@ No modules.
 | <a name="input_rbac_bindings"></a> [rbac\_bindings](#input\_rbac\_bindings) | RBAC Bindings to be added to the cluster | <pre>list(object({<br/>    rbac_type = string<br/>    namespace = optional(string)<br/>    rbac_role = optional(map(string))<br/>    subjects = optional(list(object({<br/>      name      = string<br/>      rbac_type = string<br/>      namespace = optional(string)<br/>    })))<br/>  }))</pre> | `[]` | no |
 | <a name="input_skip_wait_for_completion"></a> [skip\_wait\_for\_completion](#input\_skip\_wait\_for\_completion) | n/a | `bool` | `true` | no |
 | <a name="input_ssh_keys"></a> [ssh\_keys](#input\_ssh\_keys) | n/a | `list(string)` | `[]` | no |
+| <a name="input_update_worker_pools_in_parallel"></a> [update\_worker\_pools\_in\_parallel](#input\_update\_worker\_pools\_in\_parallel) | Whether to update worker pools in parallel. When true, all worker node pools are updated simultaneously. | `bool` | `true` | no |
 
 ## Outputs
 

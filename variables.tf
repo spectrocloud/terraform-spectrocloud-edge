@@ -140,3 +140,9 @@ variable "cluster_timezone" {
   description = "Timezone for the cluster."
   default     = ""
 }
+
+variable "update_worker_pools_in_parallel" {
+  type        = bool
+  description = "Whether to update worker pools in parallel. When true, all worker node pools are updated simultaneously."
+  default     = true
+}
