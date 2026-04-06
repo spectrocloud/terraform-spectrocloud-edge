@@ -4,7 +4,7 @@
 
 module "edge-demo-module-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.3"
+  version = "2.0.4"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -121,7 +121,7 @@ module "edge-demo-module-template" {
 
 module "edge-demo-module-no-template" {
   source  = "spectrocloud/edge/spectrocloud"
-  version = "2.0.3"
+  version = "2.0.4"
   # Store Number/Location
   name = "demo"
   # add tags to the cluster (optional) list(strings)
@@ -142,6 +142,9 @@ module "edge-demo-module-no-template" {
 
   # Cluster Timezone
   cluster_timezone = "America/New_York"
+
+  # Update worker pools in parallel (optional, default: true)
+  # update_worker_pools_in_parallel = false
 
   # Node Pools for Cluster
   machine_pools = [
